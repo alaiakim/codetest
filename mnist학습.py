@@ -16,12 +16,14 @@ x_train = x_train.astype("float32") / 255.0
 x_test = x_test.astype("float32") / 255.0
 
 # Add a channel dimension to indicate they are grayscale
-# CNN이 요구하는 채널 차원 추가 (흑백이라 채널 1)
+# CNN이 요구하는 채널 차원 추가 (흑백이라 채널 1개. RGB 모두 사용하면 채널 3개)
 x_train = np.expand_dims(x_train, -1)
 x_test = np.expand_dims(x_test, -1)
 
 # One-hot encode the labels
-# 정수 라벨 → one-hot 인코딩    예: 3 → [0,0,0,1,0,0,0,0,0,0]
+# 정수 라벨 → one-hot 인코딩 
+# to_categorical 이라는 함수를 사용. onehot 벡터로 만들기 위함
+# 예를들어, 5 -> [0,0,0,0,0,1,0,0,0,0] 0 -> [1,0,0,0,0,0,0,0,0,0]
 y_train = keras.utils.to_categorical(y_train, num_classes)
 y_test = keras.utils.to_categorical(y_test, num_classes)
 
@@ -42,7 +44,7 @@ model.compile(optimizer='adam',     # 학습률 자동 조정, 모멘텀
               loss='categorical_crossentropy',      # 다중 클래스 분류용 손실 함수
               metrics=['accuracy'])         # 분류 정확도 지표 사용
 
-# Training the model
+# Training the model            순전파 역전파 계산을 fit 이 다 해줌
 history = model.fit(x_train, y_train, 
                     batch_size=128, 
                     epochs=10, 
